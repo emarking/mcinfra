@@ -1,0 +1,9 @@
+[app] 
+#apperver ansible_host=192.168.13.148 ansible_ssh_user=eugene ansible_ssh_pass=qwe123$ ansible_sudo_pass=bgtyhn123$ ansible_become_password=bgtyhn123$
+apperver ansible_host=192.168.13.148
+
+
+
+[all:children]
+app
+

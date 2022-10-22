@@ -1,0 +1,54 @@
+---
+- name: Copy SSH certs to hosts
+  hosts: all
+  become: true
+  become_method: su
+  become_user: root
+  vars_files:
+    - ./vars/users.yml
+
+  tasks:
+
+    - name: Copy certs
+      authorized_key:
+        user: "{{ item }}"
+        key: "{{ lookup('file', cert_path + item + '.id_rsa.pub') }}"
+      with_items: "{{ users }}"
+      register: result
+
+    - name: Copy temlates
+      template:
+        src: "{{ tPath + sshd }}"
+        dest: "{{ SshdPath }}"
+        mode: 0644
+        owner: root
+        group: root
+
+    - name: Change Banner
+      template:
+        src: "{{ tPath + banner }}"
+        dest: "{{ BannerPath }}"
+        mode: 0644
+        owner: root
+        group: root
+      notify:
+          - restart ssh
+
+
+    - name: Allow the admins group to run sudo without requiring a password
+      community.general.sudoers:
+        name: "{{ group }}"
+        group: "{{ group }}"
+        commands: ALL
+
+    - name: Debuginfo
+      debug:
+        var: result 
+
+  handlers:
+    - name: restart ssh
+      service:
+        name=sshd
+        state=restarted
+
+  

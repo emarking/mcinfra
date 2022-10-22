@@ -1,0 +1,26 @@
+---
+- name: Generate Certificates
+ 
+  hosts: localhost
+  vars_files:
+      ./vars/users.yml
+  
+  tasks:
+
+  - name: Gerate Certificates
+    openssh_keypair:
+        path: "{{ cert_path + item }}.id_rsa"
+        type: rsa
+        size: 4096
+        state: present
+        force: no
+    with_items: "{{ users }}"     
+    register: result
+
+  - name: print result
+    debug:
+      var: result
+
+
+
+

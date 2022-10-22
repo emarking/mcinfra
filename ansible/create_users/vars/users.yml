@@ -1,0 +1,38 @@
+---
+#New users
+users:
+  - andrey
+  - uma
+  - dima
+  - ilkhom
+  - eugenem
+
+# group name for new user
+group: admins
+
+#Shell
+
+shell: /bin/bash
+
+# Cert path for generated certs
+
+cert_path: /home/eugene/multicard_infra/ansible/certs/
+
+#Pre req soft for create users playbook
+pre_req:
+  - apt-transport-https 
+  - ca-certificates
+  - sudo
+
+#SSHD CONF VARS
+
+PermitRootLogin: 'no'
+PasswordAuthentication: 'yes'
+BannerPath: /etc/banner
+
+#Templates path&var
+
+tPath: /home/eugene/multicard_infra/ansible/create_users/templates/
+banner: banner.j2
+sshd: sshd.conf.j2
+SshdPath: /etc/ssh/sshd_config
